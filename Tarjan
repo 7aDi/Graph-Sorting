@@ -1,0 +1,34 @@
+class DiGraph:
+    def __init__(self, graph_size):
+        self.graph_size = graph_size
+        self.adj = [[] for i in range(graph_size)]
+
+    def add_edge(self, i, j):
+        self.adj[i - 1].append(j)
+
+    def remove_edge(self, i, j):
+        self.adj[i-1].remove(j)
+
+
+T = []
+
+def tarjan(graph):
+
+    global mark
+    mark = [None]*graph.graph_size
+    unmarked = [i for i in range(graph.graph_size)]
+    while unmarked:
+        n = unmarked.pop()
+        dfs(graph, n)
+
+
+def dfs(g, n):
+    global mark
+    if mark[n] == "active":
+        raise Exception("Not a DAG")
+    if not mark[n]:
+        mark[n] = "active"
+        for m in graph.adj[n]:
+            dfs(g, m - 1)
+        mark[n] = "done"
+        T.append(n+1)
