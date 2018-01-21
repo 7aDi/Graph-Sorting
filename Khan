@@ -1,1 +1,33 @@
+class DiGraph:
+    def __init__(self, graph_size):
+        self.graph_size = graph_size
+        self.adj = [[] for i in range(graph_size)]
 
+    def add_edge(self, i, j):
+        self.adj[i - 1].append(j)
+
+    def remove_edge(self, i, j):
+        self.adj[i-1].remove(j)
+
+
+def khan(graph):
+    topo = []
+    pred_count = [0] * graph.graph_size
+    for i in range(0, graph.graph_size):
+        for j in graph.adj[i]:
+            pred_count[j-1] += 1
+    c = [m+1 for m in range (0, len(pred_count)) if not pred_count[m]]
+    while c:
+        n = c.pop(0)
+        topo.append(n)
+        while graph.adj[n-1]:
+            m = graph.adj[n-1][0]
+            graph.remove_edge(n, m)
+            pred_count[m-1] -= 1
+            if not pred_count[m-1]:
+                c.append(m)
+    for n in range(graph.graph_size):
+        if graph.adj[n]:  # a cycle?
+            print(graph.adj[n])
+            raise Exception("Not a DAG")
+    return topo
